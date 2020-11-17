@@ -1,9 +1,6 @@
 package com.example.touchgesture;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MotionEvents extends AppCompatActivity implements View.OnTouchListener {
 
@@ -23,19 +23,15 @@ public class MotionEvents extends AppCompatActivity implements View.OnTouchListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_motion_events);
-        RootLayout = (ViewGroup) findViewById(R.id.rootLayout);
+        RootLayout = findViewById(R.id.rootLayout);
 
         //new image
         Button NewImage =findViewById(R.id.new_image_button);
-        NewImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Add_Image();
-            }
-        });
+        NewImage.setOnClickListener(v -> Add_Image());
         clickCount = 0;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         final int X = (int) event.getRawX();
@@ -53,42 +49,24 @@ public class MotionEvents extends AppCompatActivity implements View.OnTouchListe
                 break;
 
             case MotionEvent.ACTION_UP:
-                if (startTime == 0){
-
-                    startTime = System.currentTimeMillis();
-
-                }else {
+                if (startTime != 0) {
                     if (System.currentTimeMillis() - startTime < 200) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MotionEvents.this);
                         builder.setMessage("Are you sure you want to delete this?");
-                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                        builder.setPositiveButton("Yes", (dialog, which) -> view.setVisibility(View.GONE));
 
-                                view.setVisibility(View.GONE);
-
-                            }
-                        });
-
-                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
 
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
 
                     }
 
-                    startTime = System.currentTimeMillis();
-
                 }
+                startTime = System.currentTimeMillis();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                break;
 
             case MotionEvent.ACTION_POINTER_UP:
                 break;
@@ -126,11 +104,12 @@ public class MotionEvents extends AppCompatActivity implements View.OnTouchListe
         return true;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void Add_Image() {
         final ImageView iv = new ImageView(this);
         iv.setImageResource(R.drawable.workout);
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(150, 150);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(200, 200);
         iv.setLayoutParams(layoutParams);
         RootLayout.addView(iv, layoutParams);
         iv.setOnTouchListener(this);

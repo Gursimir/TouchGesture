@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TouchGesture</string>
+    <string name="app_image">App Image</string>
+    <string name="workout_image">Workout Image</string>
+    <string name="move_to_motionevent">Move to MotionEvent</string>
 </resources>
